@@ -36,6 +36,9 @@
 <script>
 import axios from 'axios'
 
+// 后端地址 - 改成你电脑的IP
+const BASE_URL = 'http://10.126.232.229:8080'
+
 export default {
   data() {
     return {
@@ -51,8 +54,8 @@ export default {
   methods: {
     async submitAuth() {
       const url = this.isLoginMode
-          ? 'http://10.126.232.229:8080/api/user/login'
-          : 'http://10.126.232.229:8080/api/user/register'
+          ? `${BASE_URL}/api/user/login`
+          : `${BASE_URL}/api/user/register`
 
       try {
         const response = await axios.post(url, null, {
@@ -86,7 +89,7 @@ export default {
 
     async loadTodos() {
       try {
-        const response = await axios.get('http://10.126.232.229:8080/api/todo/list', {
+        const response = await axios.get(`${BASE_URL}/api/todo/list`, {
           params: { userId: this.userId }
         })
         this.todos = response.data
@@ -98,7 +101,7 @@ export default {
     async addTodo() {
       if (!this.newTodoTitle.trim()) return
       try {
-        const response = await axios.post('http://10.126.232.229:8080/api/todo/add', null, {
+        const response = await axios.post(`${BASE_URL}/api/todo/add`, null, {
           params: {
             userId: this.userId,
             title: this.newTodoTitle
@@ -113,7 +116,7 @@ export default {
 
     async toggleTodo(todo) {
       try {
-        await axios.put('http://10.126.232.229:8080/api/todo/toggle', null, {
+        await axios.put(`${BASE_URL}/api/todo/toggle`, null, {
           params: { id: todo.id }
         })
       } catch (error) {
@@ -124,7 +127,7 @@ export default {
 
     async deleteTodo(id) {
       try {
-        await axios.delete('http://10.126.232.229:8080/api/todo/delete', {
+        await axios.delete(`${BASE_URL}/api/todo/delete`, {
           params: { id: id }
         })
         this.todos = this.todos.filter(t => t.id !== id)
@@ -143,3 +146,56 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.container {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+.auth {
+  text-align: center;
+}
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 8px;
+  width: 200px;
+}
+button {
+  margin: 5px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+.add-todo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.add-todo input {
+  flex: 1;
+  margin: 0;
+}
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+.todo-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+}
+.completed {
+  text-decoration: line-through;
+  color: gray;
+}
+a {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
+}
+</style>
